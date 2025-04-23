@@ -1,4 +1,4 @@
-name: telomere-length-estimation
+name: TeloSnake
 channels:
   - conda-forge
   - bioconda

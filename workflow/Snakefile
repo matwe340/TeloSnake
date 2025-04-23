@@ -28,8 +28,8 @@ def bam_files(wildcards):
 
 rule output_files:
 	input:
-		expand("data/{species}.parsed_computel_output", species = config ["species"]), 	
-		expand("data/{species}.parsed_telseq_output", species = config ["species"]) 	
+		expand("results/{species}.parsed_computel_output", species = config ["species"]), 	
+		expand("results/{species}.parsed_telseq_output", species = config ["species"]) 	
 
 rule run_computel:
 	input:
@@ -38,7 +38,7 @@ rule run_computel:
 	resources:
 		mem_mb=100000
 	output: 
-		directory("data/computel/{ID}_computel_out")
+		directory("results/computel/{ID}_computel_out")
 	shell:
 		"""
 		ml hpc-env/13.1                                                                                                                                                                                                                        
@@ -49,9 +49,9 @@ rule run_computel:
 
 rule parse_computel_output:
 	input:
-		expand("data/computel/{ID}_computel_out", ID = get_individuals)
+		expand("results/computel/{ID}_computel_out", ID = get_individuals)
 	output: 
-		expand("data/{species}.parsed_computel_output", species = config ["species"]) 
+		expand("results/{species}.parsed_computel_output", species = config ["species"]) 
 	shell:
 		"""
 		for file in  {input}; do
@@ -66,21 +66,20 @@ rule run_telseq:
 	input:
 		bam_files	
 	output:	
-		"data/telseq/{ID}_telseq_output"
+		"results/telseq/{ID}_telseq_output"
 	shell:
 		"""
 		telseq \
 		   -r 150 \
 		   {input} \
 		   -o {output}
-		   #-o data/{wildcards.ID}_telseq_output
 		"""
 
 rule parse_telseq_output:
 	input:
-		expand("data/telseq/{ID}_telseq_output", ID = get_individuals)
+		expand("results/telseq/{ID}_telseq_output", ID = get_individuals)
 	output: 
-		expand("data/{species}.parsed_telseq_output", species = config ["species"]) 	
+		expand("results/{species}.parsed_telseq_output", species = config ["species"]) 	
 	shell:
 		"""
 		echo 'ID' | paste - <(head -1 {input[0]}) >> {output} 
