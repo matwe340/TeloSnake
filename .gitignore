@@ -1,0 +1,10 @@
+data/
+.snakemake
+logs/
+results/
+resources/
+config.yml
+
+
+!results/.gitkeep
+!resources/.gitkeep

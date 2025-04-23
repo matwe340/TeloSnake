@@ -1,0 +1,7 @@
+individual_file: "data/individuals.txt"
+fastq_dir: "/dss/work/axbo4983/Robins/variant-calling/data/fastq_trimmed"
+bam_dir: "/nfs/group/aggenmig/archive/species/robin/experiments/RESEQ/vcf/bam"
+genome_size:  120000000
+reference_assembly: "/dss/work/hote1586/proj/robin/reference/bEriRub2_1.curated_primary.20200401.fa.fai"
+n_chr: 40
+species: "european_robin"

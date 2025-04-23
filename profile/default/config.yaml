@@ -1,0 +1,6 @@
+executor: slurm
+jobs: 200
+default-resources: 
+  slurm_partition: mpcs.p 
+  mem_mb: 80000
+  runtime: 2880

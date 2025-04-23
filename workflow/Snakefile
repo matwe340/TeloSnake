@@ -1,0 +1,90 @@
+import re
+import os
+from glob import glob
+
+configfile: "config.yml"
+
+localrules: parse_computel_output, parse_telseq_output
+
+def get_individuals(wildcards):  
+	individuals = []
+	with open(config["individual_file"], 'r') as f:
+		for line in f:
+			line = line.strip()
+			if line == '':
+				continue
+			individuals.append(line)
+	return individuals
+
+def fastq_files(wildcards):
+	fastq_glob_paths = expand("{fastq_dir}/{ID}_R{read}.*.fastq.gz", fastq_dir = config['fastq_dir'], read = [1,2], ID=wildcards.ID)
+	fastq_files = [path for glob_path in fastq_glob_paths for path in glob(glob_path)]
+	return fastq_files
+
+def bam_files(wildcards):
+	bam_glob_paths = expand("{bam_dir}/{ID}.*.bam", bam_dir = config['bam_dir'], ID=wildcards.ID)
+	bam_files = [path for glob_path in bam_glob_paths for path in glob(glob_path)]
+	return bam_files
+
+rule output_files:
+	input:
+		expand("data/{species}.parsed_computel_output", species = config ["species"]), 	
+		expand("data/{species}.parsed_telseq_output", species = config ["species"]) 	
+
+rule run_computel:
+	input:
+		fastq_files	
+	threads: 4
+	resources:
+		mem_mb=100000
+	output: 
+		directory("data/computel/{ID}_computel_out")
+	shell:
+		"""
+		ml hpc-env/13.1                                                                                                                                                                                                                        
+		ml Bowtie2
+		ml R
+		/user/hote1586/tools/computel/computel.sh -lgenome {config[genome_size]} -ref {config[reference_assembly]} -nchr {config[n_chr]} -1 {input[0]} -2 {input[1]} -o {output}
+		"""
+
+rule parse_computel_output:
+	input:
+		expand("data/computel/{ID}_computel_out", ID = get_individuals)
+	output: 
+		expand("data/{species}.parsed_computel_output", species = config ["species"]) 
+	shell:
+		"""
+		for file in  {input}; do
+		id=$(echo $file/tel.length.txt | cut -f 3 -d "/" | cut -f 1 -d "_")
+		length=$(head -n2 $file/tel.length.txt | tail -n +2 | cut -f 2)
+		depth=$(head -5 $file/tel.length.txt | tail -n +5 | cut -f 2)
+		echo -e  $id'\t'$length'\t'$depth >> {output}
+		done
+		"""
+
+rule run_telseq:
+	input:
+		bam_files	
+	output:	
+		"data/telseq/{ID}_telseq_output"
+	shell:
+		"""
+		telseq \
+		   -r 150 \
+		   {input} \
+		   -o {output}
+		   #-o data/{wildcards.ID}_telseq_output
+		"""
+
+rule parse_telseq_output:
+	input:
+		expand("data/telseq/{ID}_telseq_output", ID = get_individuals)
+	output: 
+		expand("data/{species}.parsed_telseq_output", species = config ["species"]) 	
+	shell:
+		"""
+		echo 'ID' | paste - <(head -1 {input[0]}) >> {output} 
+		for file in {input}; do 
+		echo $file | cut -f 1 -d "_" | cut -f 3 -d "/" | paste - <(tail -n 1 $file) >> {output} 
+		done
+		"""

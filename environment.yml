@@ -1,0 +1,14 @@
+name: telomere-length-estimation
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - python
+  - bioconda::snakemake
+  - bioconda::snakemake-executor-plugin-slurm
+  - matplotlib
+  - bioconda::telseq
+  - bioconda::bowtie2=2.5
+  - bioconda::samtools
+  - R
