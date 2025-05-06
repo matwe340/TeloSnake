@@ -4,7 +4,7 @@ logs/
 results/
 resources/
 config.yml
-
+config_blackcaps.yml
 
 !results/.gitkeep
 !resources/.gitkeep

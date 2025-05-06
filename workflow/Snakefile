@@ -38,12 +38,9 @@ rule run_computel:
 	resources:
 		mem_mb=100000
 	output: 
-		directory("results/computel/{ID}_computel_out")
+		temp(directory("results/computel/{ID}_computel_out"))
 	shell:
 		"""
-		ml hpc-env/13.1                                                                                                                                                                                                                        
-		ml Bowtie2
-		ml R
 		/user/hote1586/tools/computel/computel.sh -lgenome {config[genome_size]} -ref {config[reference_assembly]} -nchr {config[n_chr]} -1 {input[0]} -2 {input[1]} -o {output}
 		"""
 

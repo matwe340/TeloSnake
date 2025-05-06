@@ -1,0 +1,7 @@
+individual_file: "resources/individuals.txt"
+fastq_dir: "/dss/work/axbo4983/blackcaps/variant-calling/data/fastq_trimmed"
+bam_dir: "/nfs/group/aggenmig/archive/species/blackcap/experiments/RESEQ/VCF/VCF_2024/bam"
+genome_size:  120000000
+reference_assembly: "/dss/work/hote1586/proj/blackcap/reference/bSylAtr1.1.fasta.fai"
+n_chr: 40
+species: "blackcap"
