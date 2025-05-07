@@ -12,3 +12,9 @@ dependencies:
   - bioconda::bowtie2=2.5
   - bioconda::samtools
   - R
+  - conda-forge::r-pixmap
+  - conda-forge::r-sp
+  - conda-forge::r-rcpparmadillo
+  - conda-forge::r-ade4
+  - conda-forge::r-segmented
+  - bioconda::r-seqinr

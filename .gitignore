@@ -2,7 +2,6 @@ data/
 .snakemake
 logs/
 results/
-resources/
 config.yml
 config_blackcaps.yml
 
