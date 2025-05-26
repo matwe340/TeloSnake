@@ -38,25 +38,31 @@ rule run_computel:
 	resources:
 		mem_mb=100000
 	output: 
-		temp(directory("results/computel/{ID}_computel_out"))
+		temp(directory("results/computel/{ID}_computel_out")),
+		"results/computel/{ID}_per_ind_computel_out"
 	shell:
 		"""
-		/user/hote1586/tools/computel/computel.sh -lgenome {config[genome_size]} -ref {config[reference_assembly]} -nchr {config[n_chr]} -1 {input[0]} -2 {input[1]} -o {output}
+		/user/hote1586/tools/computel/computel.sh -lgenome {config[genome_size]} -ref {config[reference_assembly]} -nchr {config[n_chr]} -1 {input[0]} -2 {input[1]} -o {output[0]}
+		id=$(echo {output[0]}/tel.length.txt | cut -f 3 -d "/" | cut -f 1 -d "_")
+		length=$(head -n2 {output[0]}/tel.length.txt | tail -n +2 | cut -f 2)
+		depth=$(head -5 {output[0]}/tel.length.txt | tail -n +5 | cut -f 2)
+		echo -e  $id'\t'$length'\t'$depth > {output[1]}
 		"""
 
 rule parse_computel_output:
 	input:
-		expand("results/computel/{ID}_computel_out", ID = get_individuals)
+		expand("results/computel/{ID}_per_ind_computel_out", ID = get_individuals)
 	output: 
 		expand("results/{species}.parsed_computel_output", species = config ["species"]) 
 	shell:
 		"""
-		for file in  {input}; do
-		id=$(echo $file/tel.length.txt | cut -f 3 -d "/" | cut -f 1 -d "_")
-		length=$(head -n2 $file/tel.length.txt | tail -n +2 | cut -f 2)
-		depth=$(head -5 $file/tel.length.txt | tail -n +5 | cut -f 2)
-		echo -e  $id'\t'$length'\t'$depth >> {output}
-		done
+		cat {input} > {output}
+		#for file in  {input}; do
+		#id=$(echo $file/tel.length.txt | cut -f 3 -d "/" | cut -f 1 -d "_")
+		#length=$(head -n2 $file/tel.length.txt | tail -n +2 | cut -f 2)
+		#depth=$(head -5 $file/tel.length.txt | tail -n +5 | cut -f 2)
+		#echo -e  $id'\t'$length'\t'$depth >> {output}
+		#done
 		"""
 
 rule run_telseq:
