@@ -1,7 +1,7 @@
 individual_file: "resources/individuals.txt"
-fastq_dir: "/dss/work/axbo4983/Robins/variant-calling/data/fastq_trimmed" # these need to be trimmed fastq files!
-bam_dir: "/nfs/group/aggenmig/archive/species/robin/experiments/RESEQ/vcf/bam"
+fastq_dir: "/fs/s6k/groups/aggenmig/archive/species/Turdus_merula/data/processed/DNA/WGS/short_reads" # these need to be trimmed fastq files!
+bam_dir: "/dss/work/hote1586/proj/blackbird/variant-calling/results/bam"
 genome_size:  120000000
-reference_assembly: "/dss/work/hote1586/proj/robin/reference/bEriRub2_1.curated_primary.20200401.fa.fai"
+reference_assembly: "/dss/work/hote1586/proj/blackbird/reference/bTur3.2/GCA_965287015.2_bTurMer3.2_genomic.fna"
 n_chr: 40
-species: "european_robin"
+species: "eurasian_blackbird"

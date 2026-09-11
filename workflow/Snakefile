@@ -22,8 +22,7 @@ def fastq_files(wildcards):
 	return fastq_files
 
 def bam_files(wildcards):
-	bam_glob_paths = expand("{bam_dir}/{ID}.*.bam", bam_dir = config['bam_dir'], ID=wildcards.ID)
-	bam_files = [path for glob_path in bam_glob_paths for path in glob(glob_path)]
+	bam_files = expand("{bam_dir}/{ID}.bam", bam_dir = config['bam_dir'], ID=wildcards.ID)
 	return bam_files
 
 rule output_files:
